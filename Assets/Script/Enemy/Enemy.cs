@@ -10,7 +10,7 @@ public class Enemy : MonoBehaviour, IBulletTrigger
 	// Use this for initialization
 	void Start ()
 	{
-	    _movement = new BasicMovement(transform);
+	    _movement = new SinMovement(transform);
 	}
 	
 	// Update is called once per frame
