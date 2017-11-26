@@ -1,12 +1,24 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Script.Spaceship;
+
+public class BulletEventArgs : EventArgs
+{
+    public IBulletTrigger TriggerHit { get; private set; }
+    public IBullet Bullet { get; private set; }
+    public BulletEventArgs(IBullet bullet, IBulletTrigger triggerHit)
+    {
+        TriggerHit = triggerHit;
+        Bullet = bullet;
+    }
+}
 
 public class Bullet : MonoBehaviour, IBullet
 {
     Rigidbody _rigidBody;
 
-    public event EventHandler Barrierhit;
+    public event EventHandler<BulletEventArgs> TriggerHit;
 
     public void Fire(Vector3 startPosition, float speed, float intensity)
     {
@@ -30,22 +42,23 @@ public class Bullet : MonoBehaviour, IBullet
 
     private void OnTriggerEnter(Collider other)
     {
-        var barrier = other.GetComponent<BulletBarrier>();
-        if (barrier != null){
-            OnBarrierhit(EventArgs.Empty);
+        var bulletTrigger = other.GetComponent<IBulletTrigger>();
+        if (bulletTrigger != null)
+        {
+            bulletTrigger.Trigger();
+            OnTriggerHit(new BulletEventArgs(this, bulletTrigger));
         }
     }
 
-    protected virtual void OnBarrierhit(EventArgs e)
+    protected virtual void OnTriggerHit(BulletEventArgs e)
     {
-        var handler = Barrierhit;
+        var handler = TriggerHit;
         if (handler != null)
             handler(this, e);
     }
 
     public void Recycle()
     {
-        Debug.Log("Recycle");
         _rigidBody.velocity = Vector3.zero;
         gameObject.SetActive(false);
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Script.Spaceship;
 using UnityEngine;
 
 
@@ -32,24 +33,19 @@ public class BulletFactory : IBulletFactory
             // ignore
         }
 
-        if (bullet == null)
-        {
-            Debug.Log("CreateNew");
-            var bulletGameObject = UnityEngine.Object.Instantiate(_weaponData.BulletPrefab, Vector3.zero, Quaternion.identity);
-            bullet = bulletGameObject.GetComponent<IBullet>();
-            bullet.Barrierhit += Bullet_Barrierhit;
-        }
-        Debug.Log("Get");
+        if (bullet != null)
+            return bullet;
+
+        var bulletGameObject = UnityEngine.Object.Instantiate(_weaponData.BulletPrefab, Vector3.zero, Quaternion.identity);
+        bullet = bulletGameObject.GetComponent<IBullet>();
+        bullet.TriggerHit += Bullet_Barrierhit;
+
         return bullet;
     }
 
-    void Bullet_Barrierhit(object sender, EventArgs e)
+    void Bullet_Barrierhit(object sender, BulletEventArgs bulletEventArgs)
     {
-        Debug.Log("Hit");
-        var bullet = sender as IBullet;
-        if (bullet != null){
-            bullet.Recycle();
-            _bullets.Enqueue(bullet);
-        }
+        bulletEventArgs.Bullet.Recycle();
+        _bullets.Enqueue(bulletEventArgs.Bullet);
     }
 }
