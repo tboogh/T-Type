@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
 
-public class Cannon : IWeapon, IFrameUpdate
+public class Cannon : ICannon, IFrameUpdate
 {
     float _intensity = 1.0f;
     bool _charging;
     readonly IBulletFactory _bulletFactory;
+
+    public event EventHandler<CannonChargeEventArgs> ChargevalueChanged;
 
     public Cannon(Vector3 muzzlePosition, WeaponData weaponData, IBulletFactory bulletFactory)
     {
@@ -22,7 +25,7 @@ public class Cannon : IWeapon, IFrameUpdate
         bullet.Fire(currentPosition + MuzzlePosition, WeaponData.BulletSpeed, _intensity);
         _intensity = 1f;
         _charging = false;
-
+        OnChargevalueChanged(_intensity, WeaponData.MaxCharge);
     }
 
     public void Charge()
@@ -35,6 +38,13 @@ public class Cannon : IWeapon, IFrameUpdate
         if (_charging)
         {
             _intensity = Mathf.Clamp(_intensity + WeaponData.ChargeRate * deltaTime, 1f, WeaponData.MaxCharge);
+            OnChargevalueChanged(_intensity, WeaponData.MaxCharge);
         }
+    }
+
+    protected virtual void OnChargevalueChanged(float intensity, float maxCharge)
+    {
+        var handler = ChargevalueChanged;
+        if (handler != null) handler(this, new CannonChargeEventArgs(intensity, maxCharge));
     }
 }

@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     IInput _input;
-    IWeapon _weapon;
-    IThruster _thruster;
+    public ICannon Cannon { get; private set; }
+    private IThruster Thruster { get; set; }
 
     [SerializeField]
     private WeaponData _weaponData;
@@ -16,10 +16,10 @@ public class PlayerController : MonoBehaviour {
 
 
 	// Use this for initialization
-	void Start () {
+	void Awake() {
         _input = new BasicInput();
-        _thruster = new Thruster(transform, _thrusterData);
-        _weapon = new Cannon(Vector3.forward, _weaponData, new BulletFactory(_weaponData));
+        Thruster = new Thruster(transform, _thrusterData);
+        Cannon = new Cannon(Vector3.forward, _weaponData, new BulletFactory(_weaponData));
 	}
 	
 	// Update is called once per frame
@@ -30,8 +30,8 @@ public class PlayerController : MonoBehaviour {
         UpdateFrame((IFrameUpdate)_input, deltaTime);
         HandleWeaponInput();
         HandleMovementInput();
-        UpdateFrame((IFrameUpdate)_thruster, deltaTime);
-        UpdateFrame((IFrameUpdate)_weapon, deltaTime);
+        UpdateFrame((IFrameUpdate)Thruster, deltaTime);
+        UpdateFrame((IFrameUpdate)Cannon, deltaTime);
     }
 
     private void UpdateFrame(IFrameUpdate frameUpdate, float delteTime)
@@ -43,22 +43,22 @@ public class PlayerController : MonoBehaviour {
     {
         if (_input.MoveUp)
         {
-            _thruster.Up();
+            Thruster.Up();
         }
 
         if (_input.MoveDown)
         {
-            _thruster.Down();
+            Thruster.Down();
         }
 
         if (_input.MoveForward)
         {
-            _thruster.Forward(false);
+            Thruster.Forward(false);
         }
 
         if (_input.MoveBack)
         {
-            _thruster.Back();
+            Thruster.Back();
         }
     }
 
@@ -77,11 +77,11 @@ public class PlayerController : MonoBehaviour {
 
     private void Charge()
     {
-        _weapon.Charge();
+        Cannon.Charge();
     }
 
     private void Fire(Vector3 currentPosition)
     {
-        _weapon.Fire(currentPosition);
+        Cannon.Fire(currentPosition);
     }
 }
