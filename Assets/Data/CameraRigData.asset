@@ -8,10 +8,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7d877ca6117e4b998cae75a6767bbf8, type: 3}
-  m_Name: ThrusterData
+  m_Script: {fileID: 11500000, guid: eb03f6eda79de4f68b7953e7b8f98d81, type: 3}
+  m_Name: CameraRigData
   m_EditorClassIdentifier: 
-  _upwardSpeed: 20
-  _downwardSpeed: 20
-  _forwardSpeed: 20
-  _backwardsSpeed: 16
+  _movementSpeed: 3

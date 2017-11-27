@@ -44,9 +44,9 @@ namespace Assets.Script
             StartCoroutine(Spawn());
         }
 
-        void Update()
+        private void OnTriggerEnter(Collider other)
         {
-            
+            PerformSpawn();
         }
     }
 }
