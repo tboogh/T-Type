@@ -13,6 +13,11 @@ namespace Script.Enemy
 
         void Start()
         {
+            Init();
+        }
+
+        public void Init()
+        {
             _y = transform.position.y;
         }
         

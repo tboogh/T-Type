@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Name: SpawnPointData
   m_EditorClassIdentifier: 
   _entityData: {fileID: 11400000, guid: 47bd5bac80ff1dc469c74db7071257d8, type: 2}
-  _amount: 5
+  _amount: 20
   _spacing: {x: 0, y: 0, z: -3}
   _rate: 0.5

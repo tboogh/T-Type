@@ -22,7 +22,7 @@ public class SpawnPointTool : Editor
                     DestroyImmediate(spawnPoint.transform.GetChild(0).gameObject);
                 }
 
-                spawnPoint.PerformSpawn();
+                spawnPoint.Spawn();
             }
         }
         serializedObject.ApplyModifiedProperties();

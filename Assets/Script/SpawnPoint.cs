@@ -9,9 +9,6 @@ namespace Assets.Script
         [SerializeField]
         private SpawnPointData _spawnPointData;
 
-        [SerializeField]
-        private bool _spawned;
-
         private int _spawnedCount;
 
         public SpawnPointData Data
@@ -19,42 +16,29 @@ namespace Assets.Script
             get { return _spawnPointData; }
         }
 
-        public bool Spawned
+        public void Spawn()
         {
-            get { return _spawned; }
-        }
 
-        public IEnumerator Spawn()
-        {
-            if (_spawned)
-                yield break;
-
-            _spawned = true;
-            do
-            {
-                Instantiate(Data.EntityData.Prefab, transform.position, Quaternion.identity);
-                _spawnedCount++;
-                yield return new WaitForSeconds(Data.Rate);
-            }
-            while (_spawnedCount < Data.Amount);
-        }
-
-        public void PerformSpawn()
-        {
+            Bounds b = new Bounds(transform.position, Vector3.one);
             for (int i = 0; i < Data.Amount; ++i)
             {
+                
                 var position = transform.position + i * Data.Spacing;
                 var go = Instantiate(Data.EntityData.Prefab, position, Quaternion.identity);
                 go.transform.parent = transform;
                 
                 var movement = go.GetComponent<IMovement>();
+                movement.Init();
                 movement.SetPosition();
-            }
-        }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            PerformSpawn();
+                var childBounds = go.GetComponent<Collider>().bounds;
+                
+                b.Encapsulate(childBounds);
+            }
+
+            var collider = GetComponent<BoxCollider>();
+            collider.size = b.size;
+            collider.center = transform.InverseTransformPoint(b.center);
         }
     }
 }

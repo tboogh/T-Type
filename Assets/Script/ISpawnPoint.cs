@@ -4,8 +4,7 @@ namespace Assets.Script
 {
     public interface ISpawnPoint
     {
-        IEnumerator Spawn();
-        bool Spawned { get; }
+        void Spawn();
         SpawnPointData Data { get; }
     }
 }

@@ -20,5 +20,10 @@ namespace Script.Enemy
         {
         
         }
+
+        public void Init()
+        {
+            
+        }
     }
 }
