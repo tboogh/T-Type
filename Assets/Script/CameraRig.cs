@@ -13,8 +13,10 @@ public class CameraRig : MonoBehaviour {
 	
 	
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
+		var worldEnd = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, 0, Camera.main.nearClipPlane));
+		Debug.Log(worldEnd);
 	}
 	
 	// Update is called once per frame

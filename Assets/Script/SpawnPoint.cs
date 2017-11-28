@@ -41,7 +41,15 @@ namespace Assets.Script
 
         public void PerformSpawn()
         {
-            StartCoroutine(Spawn());
+            for (int i = 0; i < Data.Amount; ++i)
+            {
+                var position = transform.position + i * Data.Spacing;
+                var go = Instantiate(Data.EntityData.Prefab, position, Quaternion.identity);
+                go.transform.parent = transform;
+                
+                var movement = go.GetComponent<IMovement>();
+                movement.SetPosition();
+            }
         }
 
         private void OnTriggerEnter(Collider other)

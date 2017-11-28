@@ -6,7 +6,7 @@ using UnityEngine;
 
 [CustomEditor(typeof(SpawnPoint))]
 [CanEditMultipleObjects]
-public class SpawnPointTools : Editor
+public class SpawnPointTool : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -16,7 +16,14 @@ public class SpawnPointTools : Editor
         {
             SpawnPoint spawnPoint = serializedObject.targetObject as SpawnPoint;
             if (spawnPoint != null)
+            {
+                while (spawnPoint.transform.childCount > 0)
+                {
+                    DestroyImmediate(spawnPoint.transform.GetChild(0).gameObject);
+                }
+
                 spawnPoint.PerformSpawn();
+            }
         }
         serializedObject.ApplyModifiedProperties();
     }
