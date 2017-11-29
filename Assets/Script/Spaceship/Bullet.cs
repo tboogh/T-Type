@@ -17,17 +17,24 @@ public class BulletEventArgs : EventArgs
 public class Bullet : MonoBehaviour, IBullet
 {
     Rigidbody _rigidBody;
-
+    private float _intensity;
+    private bool _penetrating;
     public event EventHandler<BulletEventArgs> TriggerHit;
 
-    public void Fire(Vector3 startPosition, float speed, float intensity)
+    public void Fire(Vector3 startPosition, float speed, float intensity, bool penetrating = false)
     {
         gameObject.SetActive(true);
         gameObject.transform.position = startPosition;
         gameObject.transform.localScale = Vector3.one * intensity;
         _rigidBody.AddForce(Vector3.forward * speed);
+        _penetrating = penetrating;
     }
 
+    public bool Penetrating
+    {
+        get { return _penetrating; }
+    }
+    
     // Use this for initialization
     void Awake()
 	{
@@ -46,7 +53,11 @@ public class Bullet : MonoBehaviour, IBullet
         if (bulletTrigger != null)
         {
             bulletTrigger.Trigger();
-            OnTriggerHit(new BulletEventArgs(this, bulletTrigger));
+            if (!_penetrating)
+            {
+                Recycle();
+                OnTriggerHit(new BulletEventArgs(this, bulletTrigger));
+            }
         }
     }
 

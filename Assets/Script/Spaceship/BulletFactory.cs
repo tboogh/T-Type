@@ -45,7 +45,6 @@ public class BulletFactory : IBulletFactory
 
     void Bullet_Barrierhit(object sender, BulletEventArgs bulletEventArgs)
     {
-        bulletEventArgs.Bullet.Recycle();
         _bullets.Enqueue(bulletEventArgs.Bullet);
     }
 }

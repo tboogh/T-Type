@@ -22,7 +22,7 @@ public class Cannon : ICannon, IFrameUpdate
     public void Fire(Vector3 currentPosition)
     {
         var bullet = _bulletFactory.CreateBullet();
-        bullet.Fire(currentPosition + MuzzlePosition, WeaponData.BulletSpeed, _intensity);
+        bullet.Fire(currentPosition + MuzzlePosition, WeaponData.BulletSpeed, _intensity, _intensity >= WeaponData.MaxCharge);
         _intensity = 1f;
         _charging = false;
         OnChargevalueChanged(_intensity, WeaponData.MaxCharge);
