@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Assets.Script.Spaceship;
 using UnityEngine;
 
-public class BulletBarrier : MonoBehaviour, IBulletTrigger
+public class EventTrigger : MonoBehaviour, IEventTrigger
 {
 
 	// Use this for initialization

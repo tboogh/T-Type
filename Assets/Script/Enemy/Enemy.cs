@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Assets.Script.Spaceship;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IBulletTrigger
+public class Enemy : MonoBehaviour, IEventTrigger
 {
     private IMovement _movement;
 

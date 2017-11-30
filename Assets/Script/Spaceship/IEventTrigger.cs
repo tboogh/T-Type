@@ -1,6 +1,6 @@
 ﻿namespace Assets.Script.Spaceship
 {
-    public interface IBulletTrigger
+    public interface IEventTrigger
     {
         void Trigger();
     }

@@ -5,9 +5,9 @@ using Assets.Script.Spaceship;
 
 public class BulletEventArgs : EventArgs
 {
-    public IBulletTrigger TriggerHit { get; private set; }
+    public IEventTrigger TriggerHit { get; private set; }
     public IBullet Bullet { get; private set; }
-    public BulletEventArgs(IBullet bullet, IBulletTrigger triggerHit)
+    public BulletEventArgs(IBullet bullet, IEventTrigger triggerHit)
     {
         TriggerHit = triggerHit;
         Bullet = bullet;
@@ -49,7 +49,7 @@ public class Bullet : MonoBehaviour, IBullet
 
     private void OnTriggerEnter(Collider other)
     {
-        var bulletTrigger = other.GetComponent<IBulletTrigger>();
+        var bulletTrigger = other.GetComponent<IEventTrigger>();
         if (bulletTrigger != null)
         {
             bulletTrigger.Trigger();
