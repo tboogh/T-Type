@@ -15,9 +15,9 @@ TagManager:
   - 
   - 
   - Player
-  - BulletSponge
-  - SpawnTrigger
-  - 
+  - Rig
+  - Terrain
+  - Enemy
   - 
   - 
   - 

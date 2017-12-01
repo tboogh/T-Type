@@ -49,15 +49,15 @@ public class Bullet : MonoBehaviour, IBullet
 
     private void OnTriggerEnter(Collider other)
     {
-        var bulletTrigger = other.GetComponent<IEventTrigger>();
-        if (bulletTrigger != null)
+        var eventTrigger = other.GetComponent<IEventTrigger>();
+        if (eventTrigger == null) 
+            return;
+        eventTrigger.Trigger();
+        
+        if (!_penetrating)
         {
-            bulletTrigger.Trigger();
-            if (!_penetrating)
-            {
-                Recycle();
-                OnTriggerHit(new BulletEventArgs(this, bulletTrigger));
-            }
+            Recycle();
+            OnTriggerHit(new BulletEventArgs(this, eventTrigger));
         }
     }
 

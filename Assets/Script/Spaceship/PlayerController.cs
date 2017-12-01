@@ -1,13 +1,12 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-
-public class PlayerController : MonoBehaviour {
-
-    IInput _input;
+public class PlayerController : MonoBehaviour
+{
+    public Bounds bounds;
+    private IInput _input;
     public ICannon Cannon { get; private set; }
     private IThruster Thruster { get; set; }
-
+    
     [SerializeField]
     private WeaponData _weaponData;
 
@@ -15,14 +14,22 @@ public class PlayerController : MonoBehaviour {
     private ThrusterData _thrusterData;
 
 
-	// Use this for initialization
-	void Awake() {
+    void Awake()
+    {
         _input = new BasicInput();
         Thruster = new Thruster(transform, _thrusterData);
         Cannon = new Cannon(Vector3.forward, _weaponData, new BulletFactory(_weaponData));
-	}
-	
-	// Update is called once per frame
+   
+    }
+
+    void Start()
+    {
+        
+    }
+
+    // Use this for initialization
+
+    // Update is called once per frame
 	void Update ()
     {
 
@@ -33,7 +40,7 @@ public class PlayerController : MonoBehaviour {
         UpdateFrame((IFrameUpdate)Thruster, deltaTime);
         UpdateFrame((IFrameUpdate)Cannon, deltaTime);
     }
-
+    
     private void UpdateFrame(IFrameUpdate frameUpdate, float delteTime)
     {
         frameUpdate.FrameUpdate(delteTime);
@@ -41,22 +48,22 @@ public class PlayerController : MonoBehaviour {
 
     private void HandleMovementInput()
     {
-        if (_input.MoveUp)
+        if (_input.MoveUp && !AtTopEdge())
         {
             Thruster.Up();
         }
 
-        if (_input.MoveDown)
+        if (_input.MoveDown && !AtBottomEdge())
         {
             Thruster.Down();
         }
 
-        if (_input.MoveForward)
+        if (_input.MoveForward && !AtRightEdge())
         {
             Thruster.Forward(false);
         }
 
-        if (_input.MoveBack)
+        if (_input.MoveBack && !AtLeftEdge())
         {
             Thruster.Back();
         }
@@ -83,5 +90,52 @@ public class PlayerController : MonoBehaviour {
     private void Fire(Vector3 currentPosition)
     {
         Cannon.Fire(currentPosition);
+    }
+    
+    private bool AtBottomEdge()
+    {
+        var minViewPort = GetMinViewPort();
+        return minViewPort.y <= 0.05;
+    }
+    
+    private bool AtTopEdge()
+    {
+        var maxViewPort = GetMaxViewPort();
+        return maxViewPort.y >= 0.95;
+    }
+    
+    private bool AtLeftEdge()
+    {
+        var minViewPort = GetMinViewPort();
+        return minViewPort.x <= 0.05;
+    }
+
+    private bool AtRightEdge()
+    {
+        var maxViewPort = GetMaxViewPort();
+        return maxViewPort.x >= 0.95;
+    }
+    
+    private Vector3 GetMinViewPort()
+    {
+        return PointInViewPort(bounds.min);
+    }    
+
+    private Vector3 GetMaxViewPort()
+    {
+        return PointInViewPort(bounds.max);
+    }
+    
+    private Vector3 PointInViewPort(Vector3 point)
+    {
+        var position = transform.position + point;
+        return Camera.main.WorldToViewportPoint(position);
+    }
+
+    private void OnDrawGizmos()
+    {
+        var min = bounds.min;
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(min, 0.5f);
     }
 }

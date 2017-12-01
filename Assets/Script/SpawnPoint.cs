@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Assets.Script.Spaceship;
 using UnityEngine;
 
 namespace Assets.Script
@@ -16,6 +18,11 @@ namespace Assets.Script
             get { return _spawnPointData; }
         }
 
+        void Awake()
+        {
+            SetChildrenActive(false);
+        }
+        
         public void Spawn()
         {
 
@@ -39,6 +46,26 @@ namespace Assets.Script
             var collider = GetComponent<BoxCollider>();
             collider.size = b.size;
             collider.center = transform.InverseTransformPoint(b.center);
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            var eventTrigger = other.GetComponent<IEventTrigger>();
+            if (eventTrigger == null) 
+                return;
+            
+            eventTrigger.Trigger();
+
+            SetChildrenActive(true);
+        }
+
+        private void SetChildrenActive(bool active)
+        {
+            for (int i = 0; i < transform.childCount; ++i)
+            {
+                var child = transform.GetChild(i);
+                child.gameObject.SetActive(active);
+            }
         }
     }
 }
