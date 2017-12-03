@@ -24,7 +24,7 @@ namespace Assets.Script.UI
 
         void Start()
         {
-            _playerController.Cannon.ChargevalueChanged += CannonOnChargevalueChanged;
+            _playerController.ChargevalueChanged += CannonOnChargevalueChanged;
         }
 
         private void CannonOnChargevalueChanged(object sender, CannonChargeEventArgs cannonChargeEventArgs)

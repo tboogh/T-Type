@@ -35,9 +35,14 @@ namespace Script.Enemy
             float amplitude = 1.5f;
             float offset = 0f;
 
+            
             var vector = transform.position;
             vector.y = _y + Mathf.Sin(vector.z * frequency)+ offset * amplitude;
             transform.position = vector;
+            
+            
+            var rotation = Quaternion.Euler(Mathf.Rad2Deg * vector.y, 0, 0);
+            transform.rotation = rotation;
         }
     }
 }

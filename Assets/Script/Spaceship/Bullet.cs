@@ -13,7 +13,7 @@ public class BulletEventArgs : EventArgs
     }
 }
 
-public class Bullet : MonoBehaviour, IBullet, ITrigger
+public class Bullet : MonoBehaviour, IBullet
 {
     Rigidbody _rigidBody;
     private float _intensity;
@@ -77,10 +77,5 @@ public class Bullet : MonoBehaviour, IBullet, ITrigger
                 Recycle();
             }
         }
-    }
-    
-    public void Respond(ITrigger trigger)
-    {
-        Recycle();
     }
 }

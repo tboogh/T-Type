@@ -35,7 +35,6 @@ public class Enemy : MonoBehaviour, IDestructable
 		{
 			Recycle();
 		}
-
 	}
 
 	private void Recycle()
