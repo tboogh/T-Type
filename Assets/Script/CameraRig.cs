@@ -11,20 +11,39 @@ public class CameraRig : MonoBehaviour {
 	private bool _enableMove;
 
 	[SerializeField]
-	private GameObject _bulletBarrier;
+	private GameObject _rightScreenTrigger;
+	
+	[SerializeField]
+	private GameObject _leftScreenTrigger;
 	
 	// Use this for initialization
 	void Start ()
 	{
-		var worldEnd = Camera.main.ViewportToWorldPoint(new Vector3(1f, .5f, Camera.main.transform.position.x));
-		var localWorldEnd = Camera.main.transform.InverseTransformPoint(worldEnd);
-		
-		worldEnd.x = worldEnd.y = 0;
-		worldEnd.z += 10f;
-		Debug.Log(localWorldEnd);
-		_bulletBarrier.transform.position = worldEnd;
+		SetupLeftTrigger();
+		SetupRightTrigger();
 	}
-	
+
+	private void SetupLeftTrigger()
+	{
+		SetupTransform(0f, -4f, _leftScreenTrigger.transform);
+	}
+
+	private void SetupRightTrigger()
+	{
+		SetupTransform(1f, 1f, _rightScreenTrigger.transform);
+	}
+
+	private static void SetupTransform(float viewportPosition, float offset, Transform objectTransform)
+	{
+		var worldPoint =
+			Camera.main.ViewportToWorldPoint(new Vector3(viewportPosition, .5f, Camera.main.transform.position.x));
+		var localWorldPoint = Camera.main.transform.InverseTransformPoint(worldPoint);
+
+		worldPoint.x = worldPoint.y = 0;
+		worldPoint.z += offset;
+		objectTransform.position = worldPoint;
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{

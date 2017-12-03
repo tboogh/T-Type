@@ -1,25 +1,23 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Assets.Script;
 using Assets.Script.Spaceship;
 
 public class BulletEventArgs : EventArgs
 {
-    public IEventTrigger TriggerHit { get; private set; }
     public IBullet Bullet { get; private set; }
-    public BulletEventArgs(IBullet bullet, IEventTrigger triggerHit)
+    public BulletEventArgs(IBullet bullet)
     {
-        TriggerHit = triggerHit;
         Bullet = bullet;
     }
 }
 
-public class Bullet : MonoBehaviour, IBullet
+public class Bullet : MonoBehaviour, IBullet, ITrigger
 {
     Rigidbody _rigidBody;
     private float _intensity;
     private bool _penetrating;
-    public event EventHandler<BulletEventArgs> TriggerHit;
 
     public void Fire(Vector3 startPosition, float speed, float intensity, bool penetrating = false)
     {
@@ -29,6 +27,8 @@ public class Bullet : MonoBehaviour, IBullet
         _rigidBody.AddForce(Vector3.forward * speed);
         _penetrating = penetrating;
     }
+
+    public event EventHandler<BulletEventArgs> BulletRecycle;
 
     public bool Penetrating
     {
@@ -47,30 +47,40 @@ public class Bullet : MonoBehaviour, IBullet
 			
 	}
 
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnBulletRecycle(BulletEventArgs e)
     {
-        var eventTrigger = other.GetComponent<IEventTrigger>();
-        if (eventTrigger == null) 
-            return;
-        eventTrigger.Trigger();
-        
-        if (!_penetrating)
-        {
-            Recycle();
-            OnTriggerHit(new BulletEventArgs(this, eventTrigger));
-        }
-    }
-
-    protected virtual void OnTriggerHit(BulletEventArgs e)
-    {
-        var handler = TriggerHit;
+        var handler = BulletRecycle;
         if (handler != null)
             handler(this, e);
     }
-
+    
     public void Recycle()
     {
         _rigidBody.velocity = Vector3.zero;
         gameObject.SetActive(false);
+        OnBulletRecycle(new BulletEventArgs(this));
+    }
+
+    void OnTriggerEnter(Collider other)
+    {    
+        if (other.GetComponent<IBulletRecycle>() != null)
+        {
+            Recycle();
+        }
+
+        var destructable = other.GetComponent<IDestructable>();
+        if (destructable != null)
+        {
+            destructable.Damage(_intensity);
+            if (!_penetrating)
+            {
+                Recycle();
+            }
+        }
+    }
+    
+    public void Respond(ITrigger trigger)
+    {
+        Recycle();
     }
 }

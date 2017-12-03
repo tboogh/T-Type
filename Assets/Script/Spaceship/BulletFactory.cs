@@ -38,12 +38,12 @@ public class BulletFactory : IBulletFactory
 
         var bulletGameObject = UnityEngine.Object.Instantiate(_weaponData.BulletPrefab, Vector3.zero, Quaternion.identity);
         bullet = bulletGameObject.GetComponent<IBullet>();
-        bullet.TriggerHit += Bullet_Barrierhit;
+        bullet.BulletRecycle += OnBulletRecycle;
 
         return bullet;
     }
 
-    void Bullet_Barrierhit(object sender, BulletEventArgs bulletEventArgs)
+    void OnBulletRecycle(object sender, BulletEventArgs bulletEventArgs)
     {
         _bullets.Enqueue(bulletEventArgs.Bullet);
     }

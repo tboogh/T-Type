@@ -31,7 +31,6 @@ namespace Assets.Script.UI
         {
             
             var chargeSliderValue = (cannonChargeEventArgs.Intensity -1f) / (cannonChargeEventArgs.MaxValue-1f);
-            Debug.Log(cannonChargeEventArgs + ", " + chargeSliderValue);
             _chargeSlider.value = chargeSliderValue;
         }
     }

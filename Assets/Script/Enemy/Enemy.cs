@@ -1,9 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Script;
 using Assets.Script.Spaceship;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IEventTrigger
+public interface IDestructable
+{
+	void Damage(float amount);
+}
+
+public class Enemy : MonoBehaviour, IDestructable
 {
     private IMovement _movement;
 
@@ -18,8 +24,22 @@ public class Enemy : MonoBehaviour, IEventTrigger
 		_movement.FrameUpdate(Time.deltaTime);
 	}
 
-    public void Trigger()
-    {
-        Destroy(gameObject);
-    }
+	public void Damage(float amount)
+	{
+		Recycle();
+	}
+	
+	void OnTriggerEnter(Collider other)
+	{    
+		if (other.GetComponent<IEnemyRecycle>() != null)
+		{
+			Recycle();
+		}
+
+	}
+
+	private void Recycle()
+	{
+		Destroy(gameObject);
+	}
 }

@@ -13,14 +13,20 @@ public class PlayerControllerTool : Editor
         serializedObject.Update();
         if (GUILayout.Button("UpdateBounds"))
         {
+
             PlayerController playerController = serializedObject.targetObject as PlayerController;
+            
             if (playerController != null)
             {
-                playerController.bounds = playerController.gameObject.GetCompoundBounds();
-
-                var boxCollider = playerController.gameObject.AddComponent<BoxCollider>();
-                boxCollider.size = playerController.bounds.size;
-                boxCollider.center = playerController.transform.InverseTransformPoint(playerController.bounds.center);;
+                var boxCollider = playerController.gameObject.GetComponent<BoxCollider>();
+                boxCollider.size = Vector3.zero;
+                boxCollider.center = Vector3.zero;
+                
+                var bounds = playerController.gameObject.GetCompoundBounds();
+                bounds.center = playerController.transform.InverseTransformPoint(bounds.center);
+                
+                var objectBounds = serializedObject.FindProperty("_movementBounds");
+                objectBounds.boundsValue = bounds;
             }
         }
         serializedObject.ApplyModifiedProperties();

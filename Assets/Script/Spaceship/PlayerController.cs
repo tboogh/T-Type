@@ -1,25 +1,34 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices;
+using Assets.Script;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Bounds bounds;
     private IInput _input;
-    public ICannon Cannon { get; private set; }
     private IThruster Thruster { get; set; }
     
+    public ICannon Cannon { get; private set; }
+
     [SerializeField]
     private WeaponData _weaponData;
 
     [SerializeField]
     private ThrusterData _thrusterData;
 
+    [SerializeField] 
+    private Bounds _movementBounds;
+
+    public Bounds MovementBounds
+    {
+        get { return _movementBounds; }
+        set { _movementBounds = value; }
+    }
 
     void Awake()
     {
         _input = new BasicInput();
         Thruster = new Thruster(transform, _thrusterData);
         Cannon = new Cannon(Vector3.forward, _weaponData, new BulletFactory(_weaponData));
-   
     }
 
     void Start()
@@ -118,24 +127,26 @@ public class PlayerController : MonoBehaviour
     
     private Vector3 GetMinViewPort()
     {
-        return PointInViewPort(bounds.min);
+        return PointInViewPort(_movementBounds.min + transform.position);
     }    
 
     private Vector3 GetMaxViewPort()
     {
-        return PointInViewPort(bounds.max);
+        return PointInViewPort(_movementBounds.max + transform.position);
     }
     
     private Vector3 PointInViewPort(Vector3 point)
     {
-        var position = transform.position + point;
-        return Camera.main.WorldToViewportPoint(position);
+        var viewPortPosition = Camera.main.WorldToViewportPoint(point);
+        return viewPortPosition;
     }
 
     private void OnDrawGizmos()
     {
-        var min = bounds.min;
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(min, 0.5f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(transform.position + MovementBounds.center, MovementBounds.size);
+        var a = _movementBounds.max + transform.position;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(a, 0.1f);
     }
 }

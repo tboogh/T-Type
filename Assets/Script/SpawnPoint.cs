@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Assets.Script
 {
-    public class SpawnPoint : MonoBehaviour, ISpawnPoint
+    public class SpawnPoint : MonoBehaviour, ISpawnPoint, IResponder
     {
         [SerializeField]
         private SpawnPointData _spawnPointData;
@@ -48,17 +48,6 @@ namespace Assets.Script
             collider.center = transform.InverseTransformPoint(b.center);
         }
 
-        void OnTriggerEnter(Collider other)
-        {
-            var eventTrigger = other.GetComponent<IEventTrigger>();
-            if (eventTrigger == null) 
-                return;
-            
-            eventTrigger.Trigger();
-
-            SetChildrenActive(true);
-        }
-
         private void SetChildrenActive(bool active)
         {
             for (int i = 0; i < transform.childCount; ++i)
@@ -66,6 +55,11 @@ namespace Assets.Script
                 var child = transform.GetChild(i);
                 child.gameObject.SetActive(active);
             }
+        }
+
+        public void Respond(ITrigger trigger)
+        {
+            SetChildrenActive(true);
         }
     }
 }
