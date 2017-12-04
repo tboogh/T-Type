@@ -31,10 +31,16 @@ public class PlayerController : MonoBehaviour, IDestructable
         var input = new BasicInput();
         var thruster = new Thruster(transform, _thrusterData, _movementBounds);
         var cannon = new Cannon(Vector3.forward, _weaponData, new BulletFactory(_weaponData));
-        
+        cannon.ChargevalueChanged += CannonOnChargevalueChanged;
         
         _context = new PlayerContext(input, thruster, cannon, transform, _rigidbody);
         _context.SetPlayingState();
+    }
+
+    private void CannonOnChargevalueChanged(object sender, CannonChargeEventArgs cannonChargeEventArgs)
+    {
+        if (ChargevalueChanged != null) 
+            ChargevalueChanged.Invoke(sender, cannonChargeEventArgs);
     }
 
     // Update is called once per frame

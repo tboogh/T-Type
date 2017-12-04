@@ -5,12 +5,7 @@ namespace Script.Enemy
     public class SinMovement : MonoBehaviour, IMovement
     {
         private float _y;
-
-        public SinMovement()
-        {
         
-        }
-
         void Start()
         {
             Init();
@@ -35,14 +30,15 @@ namespace Script.Enemy
             float amplitude = 1.5f;
             float offset = 0f;
 
-            
+            var v = transform.position;
             var vector = transform.position;
             vector.y = _y + Mathf.Sin(vector.z * frequency)+ offset * amplitude;
             transform.position = vector;
             
             
-            var rotation = Quaternion.Euler(Mathf.Rad2Deg * vector.y, 0, 0);
-            transform.rotation = rotation;
+            v.y = _y + Mathf.Sin((v.z + .1f) * frequency)+ offset * amplitude;
+            v.z += .1f;
+            transform.LookAt(v);
         }
     }
 }
