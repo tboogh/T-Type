@@ -4,15 +4,17 @@ public class Thruster : IThruster, IFrameUpdate
 {
     private Vector3 _thruser;
     private Transform _transform;
-    private Bounds _movementBounds { get; set; }
-    public ThrusterData _thrusterData { get; private set; }
+    private readonly Rigidbody _rigidbody;
+    private Bounds MovementBounds { get; set; }
+    private ThrusterData ThrusterData { get; set; }
 
-    public Thruster(Transform transform, ThrusterData _thrusterData, Bounds movementBounds)
+    public Thruster(Transform transform, ThrusterData thrusterData, Bounds movementBounds, Rigidbody rigidbody)
     {
-        this._thrusterData = _thrusterData;
+        ThrusterData = thrusterData;
         _transform = transform;
+        _rigidbody = rigidbody;
         _thruser = Vector3.zero;
-        _movementBounds = movementBounds;
+        MovementBounds = movementBounds;
     }
 
     public void Back()
@@ -20,7 +22,7 @@ public class Thruster : IThruster, IFrameUpdate
         if (!CanMoveLeft())
             return;
         
-        _thruser.z = -_thrusterData.BackwardsSpeed;
+        _thruser.z = -ThrusterData.BackwardsSpeed;
     }
 
     public void Down()
@@ -28,7 +30,7 @@ public class Thruster : IThruster, IFrameUpdate
         if (!CanMoveDown())
             return;
         
-        _thruser.y = -_thrusterData.DownwardSpeed;
+        _thruser.y = -ThrusterData.DownwardSpeed;
     }
 
     public void Forward(bool afterBurner)
@@ -36,7 +38,7 @@ public class Thruster : IThruster, IFrameUpdate
         if (!CanMoveForward())
             return;
         
-        _thruser.z = _thrusterData.ForwardSpeed;
+        _thruser.z = ThrusterData.ForwardSpeed;
     }
 
     public void Up()
@@ -44,12 +46,12 @@ public class Thruster : IThruster, IFrameUpdate
         if (!CanMoveUp())
             return;
         
-        _thruser.y = _thrusterData.UpwardSpeed;
+        _thruser.y = ThrusterData.UpwardSpeed;
     }
 
     public void FrameUpdate(float deltaTime)
     {
-        _transform.Translate(_thruser * deltaTime);
+        _rigidbody.velocity = _thruser * deltaTime;
         _thruser = Vector3.zero;
     }
     
@@ -79,12 +81,12 @@ public class Thruster : IThruster, IFrameUpdate
     
     private Vector3 GetMinViewPort()
     {
-        return PointInViewPort(_movementBounds.min + _transform.position);
+        return PointInViewPort(MovementBounds.min + _transform.position);
     }    
 
     private Vector3 GetMaxViewPort()
     {
-        return PointInViewPort(_movementBounds.max + _transform.position);
+        return PointInViewPort(MovementBounds.max + _transform.position);
     }
     
     private Vector3 PointInViewPort(Vector3 point)

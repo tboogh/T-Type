@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d877ca6117e4b998cae75a6767bbf8, type: 3}
   m_Name: ThrusterData
   m_EditorClassIdentifier: 
-  _upwardSpeed: 20
-  _downwardSpeed: 20
-  _forwardSpeed: 20
-  _backwardsSpeed: 16
+  _upwardSpeed: 1000
+  _downwardSpeed: 1000
+  _forwardSpeed: 1000
+  _backwardsSpeed: 1000

@@ -1,5 +1,4 @@
-﻿using Assets.Script.State;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerStateFactory
 {
@@ -28,33 +27,5 @@ public class PlayerStateFactory
     public IPlayerState CreateDeadState()
     {
         return new PlayerDeadState(_context, _rigidbody);
-    }
-}
-
-public class PlayerDeadState : State, IPlayerState, IEnableAware, IDisableAware
-{
-    private readonly Rigidbody _rigidbody;
-
-    public PlayerDeadState(IPlayerContext context, Rigidbody rigidbody) : base(context)
-    {
-        _rigidbody = rigidbody;
-    }
-
-    public void Update(float deltaTime)
-    {
-        
-    }
-
-    public void OnEnable()
-    {
-
-        _rigidbody.isKinematic = false;
-        _rigidbody.AddForce(0, -5f, 5f);
-        _rigidbody.AddTorque(35, 5, 45);
-    }
-
-    public void OnDisable()
-    {
-        _rigidbody.isKinematic = true;
     }
 }

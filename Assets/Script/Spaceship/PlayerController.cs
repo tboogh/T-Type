@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour, IDestructable
     {
         _rigidbody = GetComponent<Rigidbody>();
         var input = new BasicInput();
-        var thruster = new Thruster(transform, _thrusterData, _movementBounds);
+        var thruster = new Thruster(transform, _thrusterData, _movementBounds, _rigidbody);
         var cannon = new Cannon(Vector3.forward, _weaponData, new BulletFactory(_weaponData));
         cannon.ChargevalueChanged += CannonOnChargevalueChanged;
         
@@ -44,12 +44,12 @@ public class PlayerController : MonoBehaviour, IDestructable
     }
 
     // Update is called once per frame
-	void Update ()
+	void FixedUpdate ()
     {
-        _context.Update(Time.deltaTime);
+        _context.Update(Time.fixedDeltaTime);
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision other)
     {
         if (!(_context.CurrentState is PlayerControlledState))
             return;
