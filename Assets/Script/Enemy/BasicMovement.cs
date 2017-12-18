@@ -25,5 +25,10 @@ namespace Script.Enemy
         {
             
         }
+
+        public void SetRotation()
+        {
+            
+        }
     }
 }

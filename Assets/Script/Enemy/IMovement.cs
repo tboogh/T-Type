@@ -1,7 +1,6 @@
-using System.Security.Cryptography;
-
 public interface IMovement : IFrameUpdate
 {
     void SetPosition();
+    void SetRotation();
     void Init();
 }

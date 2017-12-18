@@ -8,6 +8,8 @@ namespace Script.Enemy
         private float _y;
         private Rigidbody _rigidbody;
         private float _t;
+        private float _frequency = .5f;
+
         private void Awake()
         {
             Init();
@@ -21,55 +23,25 @@ namespace Script.Enemy
         
         public void FrameUpdate(float deltaTime)
         {
-            _t += deltaTime;
-            _rigidbody.rotation = SetRotation();
-            var vel = _rigidbody.rotation * Vector3.back * deltaTime * 100f;
-            Debug.DrawRay(_rigidbody.position, vel, Color.red);
-            _rigidbody.velocity = vel;
+            var position = transform.position;
+            position.z -= 10 * deltaTime;
+            transform.position = position;
+            SetPosition();
+            SetRotation();
         }
 
-        private Quaternion SetRotation()
+        public void SetRotation()
         {
-            var f = Mathf.Sin(_t) * -45;
-            Debug.Log(string.Format("{0} {1}", _t, f));
-            return Quaternion.Euler(f, 0, 0);
+            var rotation = -(Mathf.Cos(transform.position.z * _frequency));
+            var q = Quaternion.Euler(Mathf.Rad2Deg * rotation, 0, 0);
+            transform.localRotation = q;
         }
 
         public void SetPosition()
         {
-            transform.position = SetStartPosition(transform.position);
-            transform.rotation = SetStartRotation(transform.position);
-        }
-
-        private Quaternion SetStartRotation(Vector3 transformPosition)
-        {
-            return Quaternion.Euler((CalculateRotation(transformPosition) * Mathf.Rad2Deg), 0, 0);         
-        }
-
-        private Vector3 SetStartPosition(Vector3 transformPosition)
-        {
-            transformPosition.y = CalculateYOffset(transformPosition);
-            return transformPosition;
-        }
-
-        private float CalculateYOffset(Vector3 position, float frequency = 1f, float amplitude = 0f, float offset = 0f)
-        {
-            return _y + Mathf.Sin(position.z * frequency)+ offset * amplitude;
-        }
-
-        private float CalculateRotation(Vector3 position, float frequency = 1f, float amplitude = 0f, float offset = 0f)
-        {
-            var value = Mathf.Tan(Mathf.Sin(position.z * frequency)+ offset * amplitude);
-            return 0;
-        }
-        
-
-        public Quaternion GetNextRotation(float frequency = .5f, float amplitude = 1.5f, float offset = 0f)
-        {
-            var v = _rigidbody .position;
-            v.y = _y + Mathf.Sin((v.z + .1f) * frequency)+ offset * amplitude;
-            v.z += .1f;
-            return Quaternion.LookRotation(v, Vector3.up);
+            var position = transform.localPosition;
+            position.y = Mathf.Sin(transform.position.z * _frequency);
+            transform.localPosition = position;
         }
     }
 }

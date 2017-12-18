@@ -37,7 +37,7 @@ namespace Assets.Script
                 var movement = go.GetComponent<IMovement>();
                 movement.Init();
                 movement.SetPosition();
-
+                movement.SetRotation();
                 var childBounds = go.GetComponent<Collider>().bounds;
                 
                 b.Encapsulate(childBounds);
